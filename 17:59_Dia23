@@ -1,0 +1,570 @@
+#include <iostream>
+#include <string>
+#include <locale>
+#include <windows.h>
+#include <vector>
+
+using namespace std;
+
+class Autor
+{
+private:
+    string nomeAutor;
+    string cpfUsuario;
+
+public:
+    Autor(const string& nomeAutor, const string& cpfUsuario) : nomeAutor(nomeAutor), cpfUsuario(cpfUsuario) {}
+
+    string getNomeAutor() const
+    {
+        return nomeAutor;
+    }
+
+    string getCPFUsuario() const
+    {
+        return cpfUsuario;
+    }
+
+    bool validarCPF() const
+    {
+        return cpfUsuario.size() == 11;
+    }
+};
+
+class Usuario
+{
+private:
+    string nomeUsuario;
+    string cpfUsuario;
+    int idadeUsuario;
+
+public:
+    Usuario(const string& nomeUsuario, const string& cpfUsuario, int idadeUsuario) : nomeUsuario(nomeUsuario), cpfUsuario(cpfUsuario), idadeUsuario(idadeUsuario) {}
+
+    string getNomeUsuario() const
+    {
+        return nomeUsuario;
+    }
+
+    string getCPFUsuario() const
+    {
+        return cpfUsuario;
+    }
+
+    bool validarCPF() const
+    {
+        return cpfUsuario.size() == 11;
+    }
+
+    int getIdadeUsuario() const
+    {
+        return idadeUsuario;
+    }
+};
+
+class Filme
+{
+public:
+    string titulo;
+    string genero;
+    float duracao;
+    int faixaEtaria;
+    int visualizacoes;
+    Autor* autor;
+
+    Filme(const string& titulo, const string& genero, float duracao, int faixaEtaria, Autor* autor)
+        : titulo(titulo), genero(genero), duracao(duracao), faixaEtaria(faixaEtaria), autor(autor) {}
+
+    string getTitulo() const
+    {
+        return titulo;
+    }
+
+    string getGenero() const
+    {
+        return genero;
+    }
+
+    float getDuracao() const
+    {
+        return duracao;
+    }
+
+    int getFaixaEtaria() const
+    {
+        return faixaEtaria;
+    }
+
+    Autor* getAutor() const
+    {
+        return autor;
+    }
+};
+
+class Gerenciador
+{
+private:
+    vector<Autor*> autores;
+    vector<Usuario*> usuarios;
+    vector<Filme*> filmes;
+
+public:
+
+
+Autor* encontraAutorPorNome(const string& nomeAutor) { //Manda o nome do autor para o filme na listagem
+    for (Autor* autor : autores) { // Autor = classe, autor=objeto do tipo Autor, autores = vetor
+        if (autor->getNomeAutor() == nomeAutor) {
+            return autor;
+        }
+    }
+    return 0;
+}
+
+
+void cadastraFilme(const string& titulo, const string& genero, float duracao, int faixaEtaria, const string& nomeAutor) {
+
+    Autor* autor = encontraAutorPorNome(nomeAutor); // verifica se o nome do autor existe para o filme
+    if (autor == 0) {
+        cout << "Autor não encontrado.\n";
+        return;
+    }
+
+    Filme* filme = new Filme(titulo, genero, duracao, faixaEtaria, autor);
+    filmes.push_back(filme);
+    cout << "Filme cadastrado com sucesso.\n";
+}
+
+
+    void pesquisa_por_nome_user()
+    {
+        string nomeUsuario;
+        bool encontrado = false;
+        cout << "Nome do Usuário: ";
+        cin.ignore();
+        getline(cin, nomeUsuario);
+        system("cls");
+        for (Usuario* usuario : usuarios)
+        {
+            if (usuario->getNomeUsuario() == nomeUsuario)
+            {
+                cout << "Nome do Usuario: " << usuario->getNomeUsuario() << "\nCPF: " << usuario->getCPFUsuario() << "\nIdade: " << usuario->getIdadeUsuario();
+                encontrado = true;
+            }
+        }
+
+        if (!encontrado)
+        {
+            cout << "\n\nNenhum registro foi encontrado com o nome digitado";
+            Sleep(10000);
+            system("cls");
+        }
+    }
+
+    void pesquisa_por_tel_user()
+    {
+        string cpfUsuario;
+        bool encontrado=false;
+        cout << "CPF do Usuário: ";
+        cin.ignore();
+        getline(cin, cpfUsuario);
+        system("cls");
+        for(Usuario* usuario : usuarios)
+        {
+            if( usuario->getCPFUsuario() == cpfUsuario )
+            {
+                cout << "Nome do Usuario: " << usuario->getNomeUsuario()<< "\nCPF: " << usuario->getCPFUsuario() << "\nIdade: " << usuario->getIdadeUsuario() ;
+                encontrado=true;
+            }
+        }
+
+        if(!encontrado)
+        {
+            cout<<"\n\nNenhum registro foi encontrado com o nome digitado";
+            Sleep(10000);
+            system("cls");
+        }
+    }
+    void pesquisa_por_nome()
+    {
+        string nomeAutor;
+        bool encontrado=false;
+        cout << "Nome do Autor: ";
+        cin.ignore();
+        getline(cin, nomeAutor);
+        system("cls");
+        for(Autor* autor : autores)
+        {
+            if( autor->getNomeAutor() == nomeAutor )
+            {
+                cout << "Nome do Autor: " << autor->getNomeAutor()<< "\nCPF: " << autor->getCPFUsuario() ;
+                encontrado=true;
+            }
+        }
+
+        if(!encontrado)
+        {
+            cout<<"\n\nNenhum registro foi encontrado com o nome digitado";
+            Sleep(10000);
+            system("cls");
+        }
+    }
+    void pesquisa_por_tel()
+    {
+        string cpfUsuario;
+        bool encontrado=false;
+        cout << "CPF do Autor: ";
+        cin.ignore();
+        getline(cin, cpfUsuario);
+        system("cls");
+        for(Autor* autor : autores)
+        {
+            if( autor->getCPFUsuario() == cpfUsuario )
+            {
+                cout << "Nome do Autor: " << autor->getNomeAutor()<< "\nCPF: " << autor->getCPFUsuario() ;
+                encontrado=true;
+            }
+        }
+
+        if(!encontrado)
+        {
+            cout<<"\n\nNenhum registro foi encontrado com o nome digitado";
+            Sleep(10000);
+            system("cls");
+        }
+    }
+    void cadastraAutor(const string& nomeAutor, const string& cpfUsuario, bool validarCPF)
+    {
+        if (validarCPF)
+        {
+            Autor* autor = new Autor(nomeAutor, cpfUsuario); // cria o objeto autor, e aloca espaço
+            if (!autor->validarCPF())
+            {
+                cout << "CPF inválido. O CPF deve ter exatamente 11 dígitos.";
+                cout << "\n";
+                delete autor;
+                return;
+            }
+            autores.push_back(autor); // adiciona o autor novo ao vetor autor, exemplo (autor1) recebeu outro o vetor fica <autor1,autor2>
+        }
+        else
+        {
+            Autor* autor = new Autor(nomeAutor, cpfUsuario);
+            autores.push_back(autor); // adiciona o autor novo ao vetor autor, exemplo (autor1) recebeu outro o vetor fica <autor1,autor2>
+        }
+        cout << "Autor cadastrado com sucesso.";
+        cout << "\n";
+    }
+
+    void cadastraUsuario(const string& nomeUsuario, const string& cpfUsuario, int idadeUsuario,bool validarCPF)
+    {
+        if (validarCPF)
+        {
+            Usuario* usuario = new Usuario(nomeUsuario, cpfUsuario, idadeUsuario); // cria o objeto usuario, e aloca espaço
+            if (!usuario->validarCPF())
+            {
+                cout << "CPF inválido. O CPF deve ter exatamente 11 dígitos." ;
+                cout << "\n";
+                delete usuario;
+                return;
+            }
+            usuarios.push_back(usuario); //mesma coisa de autor
+        }
+        else
+        {
+            Usuario* usuario = new Usuario(nomeUsuario, cpfUsuario, idadeUsuario);
+            usuarios.push_back(usuario);
+        }
+        cout << "Usuário cadastrado com sucesso."; //mesma coisa de autor
+        cout << "\n";
+    }
+
+    void listarAutores() const
+    {
+        cout << "Lista de Autores:";
+        cout << "\n";
+        for (Autor* autor : autores)
+        {
+            cout << "Nome do Autor: " << autor->getNomeAutor() << ", CPF do Autor: " << autor->getCPFUsuario() ;
+            cout << "\n";
+        }
+    }
+
+    void listarUsuarios() const
+    {
+        cout << "Lista de Usuários:" ;
+        cout << "\n";
+        for (Usuario* usuario : usuarios)
+        {
+            cout << "Nome do Usuário: " << usuario->getNomeUsuario() << ", CPF do Usuário: " << usuario->getCPFUsuario()<< ",  Idade do Usuário: "<< usuario->getIdadeUsuario();
+            cout << "\n";
+        }
+    }
+    void listarFilmes() const
+    {
+        cout << "Lista de Filmes:" ;
+        cout << "\n";
+        for (Filme* filme : filmes)
+        {
+            cout << "Nome do Filme: " << filme->getTitulo() << ", Gênero: " << filme->getGenero() << ", Duração: "<< filme->getDuracao()<< ", Faixa etaria: "<< filme->getFaixaEtaria() << ", Autor: "<< filme->getAutor()->getNomeAutor() ;
+            cout << "\n";
+        }
+    }
+
+    void inserirRegistrosAutomaticos()
+    {
+        cadastraAutor("Autor1", "12345678912", true);
+        cadastraAutor("Autor2", "98765432198", true);
+        cadastraAutor("Autor3", "96765432198", true);
+        cadastraAutor("Rafael", "96769432198", true);
+        cadastraAutor("Tulio", "96769431198", true);
+        cadastraUsuario("Usuario1", "11111111111",15, true);
+        cadastraUsuario("Usuario2", "22222222222",16, true);
+        cadastraUsuario("Usuario3", "33333333333",18, true);
+        cadastraUsuario("Usuario4", "44444444444",21, true);
+        cadastraUsuario("Usuario5", "55555555555",49, true);
+        cadastraFilme("Filme1","Ação",100,16,"Autor1");
+        cadastraFilme("Filme2","Terror",50,18,"Autor2");
+        cadastraFilme("Filme3","Adulto",12,18,"Autor3");
+        cadastraFilme("Filme4","Comédia",120,1,"Rafael");
+        cadastraFilme("Filme5","Genero1",110,43,"Tulio");
+    }
+};
+
+int main()
+{
+    setlocale(LC_ALL, "Portuguese");
+
+    char opcao = '0';
+    int validadorRA=0;
+    Gerenciador gerenciador;
+
+    do
+    {
+        cout << "\nDigite:\n\n";
+        cout << "1) Cadastrar Filme\n";
+        cout << "2) Cadastrar Autor\n";
+        cout << "3) Cadastrar Usuário\n";
+        cout << "4) Listar Autores\n";
+        cout << "5) Listar Filmes\n";
+        cout << "6) Listar Usuários\n";
+        cout << "7) Pesquisar Filme\n";
+        cout << "8) Pesquisar Autor\n";
+        cout << "9) Pesquisar Usuário\n";
+        cout << "A) Inserir Registros Automáticos\n";
+        cout << "S) Sair\n\n";
+        cout << "Opção: ";
+        cin >> opcao;
+
+        switch (opcao)
+        {
+        case '1':
+        {
+            string titulo;
+            string genero;
+            float duracao;
+            int faixaEtaria;
+            string autor;
+            float verifica_duracao;
+            int verifica_faixaEtaria;
+
+
+            cout << "\n=== Cadastro de Filme ===\n";
+
+            cout << "Titulo do Filme: ";
+            cin.ignore();
+            getline(cin, titulo);
+
+            cout << "Genero do filme: ";
+            getline(cin, genero);
+
+            cout << "Duração do filme: ";
+            cin>>verifica_duracao;
+            if (verifica_duracao > 0){
+                duracao=verifica_duracao;
+            }
+            else{
+                cout << "Duração Inválida, ta de brincadeira?";
+                break;
+            }
+            cout << "Classificação indicativa do filme: ";
+            cin>>verifica_faixaEtaria;
+            if (verifica_faixaEtaria > 0){
+                faixaEtaria=verifica_faixaEtaria;
+            }
+            else{
+                cout << "Faixa etária inválida, mas não é possível";
+                break;
+            }
+
+            cout<<"ta faltando colocar o nome do autor e definir as views";
+
+            gerenciador.cadastraFilme(titulo, genero, duracao,faixaEtaria,autor);
+            break;
+        }
+        case '2':
+        {
+            string nomeAutor, cpfAutor;
+
+            cout << "\n=== Cadastro de Autor ===\n";
+            cout << "Nome do Autor: ";
+            cin.ignore();
+            getline(cin, nomeAutor);
+            cout << "CPF do Autor: ";
+            getline(cin, cpfAutor);
+
+            gerenciador.cadastraAutor(nomeAutor, cpfAutor, true);
+            break;
+        }
+        case '3':
+        {
+            string nomeUsuario, cpfUsuario;
+            int verifiqueidade,idadeUsuario;
+
+            cout << "\n=== Cadastro de Usuário ===\n";
+            cout << "Nome do Usuário: ";
+            cin.ignore();
+            getline(cin, nomeUsuario);
+            cout << "CPF do Usuário: ";
+            getline(cin, cpfUsuario);
+            cout << "Idade do Usuário: ";
+            cin>>verifiqueidade;
+            if(verifiqueidade<200&&verifiqueidade>0)
+            {
+                idadeUsuario=verifiqueidade;
+                gerenciador.cadastraUsuario(nomeUsuario, cpfUsuario, idadeUsuario, true);
+            }
+            else
+            {
+                cout << "Idade invalida!!!\n";
+                break;
+            }
+
+            break;
+        }
+        case '4':
+        {
+            gerenciador.listarAutores();
+            Sleep(2000); // Aguarda 2000 milissegundos (2 segundos)
+            break;
+        }
+        case '5':
+        {
+            gerenciador.listarFilmes();
+            Sleep(2000);
+            break;
+        }
+        case '6':
+        {
+            gerenciador.listarUsuarios();
+            Sleep(2000);
+            break;
+        }
+        case '7':
+        {
+            string titulo, genero, nomeAutor;
+
+            cout << "\n=== Pesquisa de Filme ===\n";
+            cout << "";
+            cout << "Título: ";
+            cin.ignore();
+            getline(cin, titulo);
+            cout << "Gênero: ";
+            getline(cin, genero);
+            cout << "Nome do Autor: ";
+            getline(cin, nomeAutor);
+
+            break;
+        }
+        case '8':
+        {
+            string nomeAutor, cpfAutor;
+
+            cout << "\n=== Pesquisa de Autor ===\n";
+            cout << "N) Pesquisa através do nome\n\n";
+            cout << "C) Pesquisa através do CPF\n\n";
+            cout << "Opção: ";
+            cin >> opcao;
+            switch (opcao)
+            {
+            case 'N':
+            case 'n':
+            {
+                gerenciador.pesquisa_por_nome();
+                Sleep(10000);
+                break;
+            }
+            case 'C':
+            case 'c':
+            {
+                gerenciador.pesquisa_por_tel();
+                Sleep(10000);
+                break;
+            }
+
+            }
+            break;
+        }
+        case '9':
+        {
+            string nomeUsuario, cpfUsuario;
+            cout << "\n=== Pesquisa de Usuario ===\n";
+            cout << "N) Pesquisa através do nome\n\n";
+            cout << "C) Pesquisa através do CPF\n\n";
+            cout << "Opção: ";
+            cin >> opcao;
+            switch (opcao)
+            {
+            case 'N':
+            case 'n':
+            {
+                gerenciador.pesquisa_por_nome_user();
+                Sleep(10000);
+                break;
+
+            }
+            case 'c':
+            case 'C':
+            {
+                gerenciador.pesquisa_por_tel_user();
+                Sleep(10000);
+                break;
+            }
+            }
+            break;
+        }
+        case 'A':
+        case 'a':
+        {
+            if(validadorRA>0){
+                cout<<"Os registros automáticos já foram feitos anteriormente.";
+                break;
+            }
+            if(validadorRA == 0){
+                gerenciador.inserirRegistrosAutomaticos();
+                cout << "Registros automáticos inseridos com sucesso." ;
+                cout << "\n";
+                validadorRA++;
+                break;
+
+            }
+        }
+        case 'S':
+        case 's':
+        {
+            cout << "Encerrando o programa..." ;
+            cout << "\n";
+            break;
+        }
+        default:
+            cout << "Opção inválida. Digite novamente." ;
+            cout << "\n";
+            break;
+        }
+        Sleep(2000); // Aguarda 2000 milissegundos (2 segundos)
+        system("cls");
+
+    }
+    while (opcao != 'S' && opcao != 's');
+
+    return 0;
+}
