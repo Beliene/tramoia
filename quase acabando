@@ -124,29 +124,6 @@ private:
     vector<Usuario*> usuarios; // mesma coisa de vetor
     vector<Filme*> filmes; //rt
 public:
-   void cadastraFilmeA(const string& titulo, const string& genero, float duracao, int faixaEtaria,int visualizacoes ,const string& nomeAutor)
-    {
-        //busca no vetor autores pra ver se existe um autor
-        bool encontrado=false; //pra falar q de inicio nao achou ainda ate percorrer pelo vetor
-        for(Autor* autor : autores) // olha todos os trens do vetor autores
-        {
-            if( autor->getNomeAutor() == nomeAutor ) // se tiver igual é que existe alguem no vetor
-            {
-                Filme* filme = new Filme(titulo, genero, duracao, faixaEtaria, visualizacoes, nomeAutor);
-                filmes.push_back(filme);//objeto filme criado e adicionado ao vetor filmes
-                encontrado=true;
-                cout<<"\nFilme Cadastrado, cujo o autor " << nomeAutor;
-            }
-        }
-
-        if(!encontrado)
-        {
-            cout<<"\nPara cadastrar um filme é necessário o autor digitado ser existente";
-            Sleep(5000);
-            system("cls");
-        }
-
-    }
  void cadastraFilme(const string& titulo, const string& genero, float duracao, int faixaEtaria,int visualizacoes ,const string& nomeAutor)
     {
         //busca no vetor autores pra ver se existe um autor
@@ -455,11 +432,11 @@ public:
         cadastraUsuario("Usuario3", "33333333333",18, true);
         cadastraUsuario("Usuario4", "44444444444",21, true);
         cadastraUsuario("Usuario5", "55555555555",49, true);
-        cadastraFilmeA("Filme1","Ação",100,16,12,"Autor1");
-        cadastraFilmeA("Filme2","Terror",50,18,120,"Autor2");
-        cadastraFilmeA("Filme3","Adulto",12,18,132,"Autor3");
-        cadastraFilmeA("Filme4","Comédia",120,1,17,"Rafael");
-        cadastraFilmeA("Filme5","Genero1",110,43,18,"Tulio");
+        cadastraFilme("Filme1","Ação",100,16,12,"Autor1");
+        cadastraFilme("Filme2","Terror",50,18,120,"Autor2");
+        cadastraFilme("Filme3","Adulto",12,18,132,"Autor3");
+        cadastraFilme("Filme4","Comédia",120,1,17,"Rafael");
+        cadastraFilme("Filme5","Genero1",110,43,18,"Tulio");
     }
  void assistir_filme()
 {
@@ -829,3 +806,5 @@ int main()
 
     return 0;
 }
+
+
