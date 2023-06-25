@@ -1,0 +1,1093 @@
+#include <iostream>
+#include <string>
+#include <locale>
+#include <windows.h>
+#include <vector>
+
+using namespace std;
+
+class Autor
+{
+private:
+    string nomeAutor;
+    string cpfUsuario;
+    float monetizacao;
+
+public:
+    Autor(const string& nomeAutor, const string& cpfUsuario) : nomeAutor(nomeAutor), cpfUsuario(cpfUsuario), monetizacao(0.0) {}
+
+    string getNomeAutor() const   // é para aparecer na listagem todos desse estilo
+    {
+        return nomeAutor;
+    }
+
+    string getCPFUsuario() const
+    {
+        return cpfUsuario;
+    }
+
+    bool validarCPF() const
+    {
+        // Verifica se o CPF tem exatamente 11 dígitos
+        return cpfUsuario.size() == 11;
+    }
+    bool CPFdiferente(const vector<Autor*>& autores) const   // Recebe-ra o vetor e fara um efeito bolha nele comparando o o cpf digita com os cpf linkados ou autor,por auxilio da criacao de um vetor
+    {
+        for (size_t i = 0; i < autores.size(); ++i)
+        {
+            if (cpfUsuario == autores[i]->getCPFUsuario())
+            {
+                return false; // CPF encontrado no vetor de autores
+            }
+        }
+        return true; // CPF não encontrado no vetor de autores
+    }
+
+};
+
+class Usuario
+{
+private:
+    string nomeUsuario;
+    string cpfUsuario;
+    int idadeUsuario;
+    int duracaoFilmeAssistido;
+
+public:
+    Usuario(const string& nomeUsuario, const string& cpfUsuario, int idadeUsuario )  : nomeUsuario(nomeUsuario), cpfUsuario(cpfUsuario), idadeUsuario(idadeUsuario), duracaoFilmeAssistido(0) {}
+
+    string getNomeUsuario() const
+    {
+        return nomeUsuario;
+    }
+
+    string getCPFUsuario() const
+    {
+        return cpfUsuario;
+    }
+
+    bool validarCPF() const
+    {
+        // Verifica se o CPF tem exatamente 11 dígitos
+        return cpfUsuario.size() == 11;
+    }
+    int getidadeUsuario() const
+    {
+        return idadeUsuario;
+    }
+    int getDuracaoFilmeAssistido() const
+    {
+        return duracaoFilmeAssistido;
+    }
+
+    void setDuracaoFilmeAssistido(int duracao)
+    {
+        duracaoFilmeAssistido = duracao;
+    }
+
+};
+class Filme : public Autor
+{
+public:
+    string titulo;
+    string genero;
+    float duracao;
+    int faixaEtaria;
+    int visualizacoes;
+
+    Filme(const string& titulo, const string& genero, float duracao, int faixaEtaria,int visualizacoes, const string& nomeAutor)
+        : Autor(nomeAutor, ""), titulo(titulo), genero(genero), duracao(duracao), faixaEtaria(faixaEtaria), visualizacoes(visualizacoes) {}
+
+    string getTitulo() const
+    {
+        return titulo;
+    }
+
+    string getGenero() const
+    {
+        return genero;
+    }
+
+    float getDuracao() const
+    {
+        return duracao;
+    }
+
+    int getFaixaEtaria() const
+    {
+        return faixaEtaria;
+    }
+    int getVisualizacoes() const
+    {
+        return visualizacoes;
+    }
+
+    void adicionarVisualizacao()
+    {
+        visualizacoes++;
+    }
+};
+
+
+class Gerenciador
+{
+private:
+    vector<Autor*> autores; // recebe o obejto e adiciona ao vetor <autor1>
+    vector<Usuario*> usuarios; // mesma coisa de vetor
+    vector<Filme*> filmes; //rt
+public:
+    void cadastraFilme(const string& titulo, const string& genero, float duracao, int faixaEtaria,int visualizacoes,const string& nomeAutor)
+    {
+        //busca no vetor autores pra ver se existe um autor
+        bool encontrado=false; //pra falar q de inicio nao achou ainda ate percorrer pelo vetor
+        for(Autor* autor : autores) // olha todos os trens do vetor autores
+        {
+            if( autor->getNomeAutor() == nomeAutor ) // se tiver igual é que existe alguem no vetor
+            {
+                Filme* filme = new Filme(titulo, genero, duracao, faixaEtaria, visualizacoes, nomeAutor);
+                filmes.push_back(filme);//objeto filme criado e adicionado ao vetor filmes
+                encontrado=true;
+                cout<<"\nFilme Cadastrado, cujo o autor " << nomeAutor;
+            }
+        }
+
+        if(encontrado == false)
+        {
+            cout<<"\nPara cadastrar um filme é necessário o autor digitado ser existente";
+            Sleep(2000);
+            system("cls");
+        }
+
+    }
+
+    void pesquisa_por_nome_user()
+    {
+        string nomeUsuario;
+        bool encontrado=false;
+        cout << "Nome do Usuário: ";
+        cin.ignore();
+        getline(cin, nomeUsuario);
+        system("cls");
+        for(Usuario* usuario : usuarios) // olha todos os trens do vetor usuarios
+        {
+            if( usuario->getNomeUsuario() == nomeUsuario ) // se tiver igual é que existe alguem no vetor
+            {
+                cout << "Nome do Usuario: " << usuario->getNomeUsuario()<< "\nCPF: " << usuario->getCPFUsuario() << "\nIdade: " << usuario->getidadeUsuario() ;
+                encontrado=true;
+            }
+        }
+
+        if(encontrado == false)
+        {
+            cout<<"\n\nNenhum registro foi encontrado com o nome digitado";
+            Sleep(2000);
+            system("cls");
+        }
+    }
+    void pesquisa_por_tel_user()
+    {
+        string cpfUsuario;
+        bool encontrado=false;
+        cout << "CPF do Usuário: ";
+        cin.ignore();
+        getline(cin, cpfUsuario);
+        system("cls");
+        for(Usuario* usuario : usuarios) // olha todos os trens do vetor usuarios
+        {
+            if( usuario->getCPFUsuario() == cpfUsuario ) // se tiver igual é que existe alguem no vetor
+            {
+                cout << "Nome do Usuario: " << usuario->getNomeUsuario()<< "\nCPF: " << usuario->getCPFUsuario() << "\nIdade: " << usuario->getidadeUsuario() ;
+                encontrado=true;
+            }
+        }
+
+        if(encontrado == false)
+        {
+            cout<<"\n\nNenhum registro foi encontrado com o nome digitado";
+            Sleep(2000);
+            system("cls");
+        }
+    }
+    void pesquisa_por_nome()
+    {
+        string nomeAutor;
+        bool encontrado=false;
+        vector<Filme*> filmesPorAutor;
+        cout << "\nLista dos Autores:\n";
+        for (const Filme* filme : filmes)
+        {
+            cout << "Autor: " << filme->getNomeAutor() << ", Nome do Filme: " << filme->getTitulo()
+                 << "\n";
+        }
+        cout << "Nome do Autor: ";
+        cin.ignore();
+        getline(cin, nomeAutor);
+        system("cls");
+        for(Autor* autor : autores)
+        {
+            if( autor->getNomeAutor() == nomeAutor )
+            {
+                cout << "Nome do Autor: " << autor->getNomeAutor()<< "\nCPF: " << autor->getCPFUsuario() ;
+                encontrado=true;
+            }
+        }
+
+        if(encontrado == false)
+        {
+            cout<<"\n\nNenhum registro foi encontrado com o nome digitado";
+            Sleep(2000);
+            system("cls");
+        }
+    }
+    void pesquisa_por_tel()
+    {
+        string cpfUsuario;
+        bool encontrado=false;
+        cout << "CPF do Autor: ";
+        cin.ignore();
+        getline(cin, cpfUsuario);
+        system("cls");
+        for(Autor* autor : autores)
+        {
+            if( autor->getCPFUsuario() == cpfUsuario )
+            {
+                cout << "Nome do Autor: " << autor->getNomeAutor()<< "\nCPF: " << autor->getCPFUsuario() ;
+                encontrado=true;
+            }
+        }
+
+        if(encontrado == false)
+        {
+            cout<<"\n\nNenhum registro foi encontrado com o nome digitado";
+            Sleep(2000);
+            system("cls");
+        }
+    }
+
+    void pesquisa_por_titulo()
+    {
+        string titulo;
+        bool encontrado=false;
+        cout << "Nome do Filme: ";
+        cin.ignore();
+        getline(cin, titulo);
+        system("cls");
+        for(Filme* filme : filmes)
+        {
+            if( filme->getTitulo() == titulo )
+            {
+                cout << "Nome do Filme: " << filme->getTitulo() << ", Gênero: " << filme->getGenero() << ", Duração: " << filme->getDuracao()
+                     << ", Faixa etária: " << filme->getFaixaEtaria() << ", Autor: " << filme->getNomeAutor() << "\n";
+                encontrado=true;
+            }
+        }
+
+        if(encontrado == false)
+        {
+            cout<<"\n\nNenhum registro foi encontrado com o nome digitado";
+            Sleep(2000);
+            system("cls");
+        }
+
+    }
+
+
+    void pesquisa_por_autor()
+    {
+
+        string nomeAutor;
+        bool encontrado=false;
+        cout << "Autor do Filme: ";
+        cin.ignore();
+        getline(cin, nomeAutor);
+        system("cls");
+        for(Filme* filme : filmes)
+        {
+            if( filme->getNomeAutor() == nomeAutor )
+            {
+                cout << "Nome do Filme: " << filme->getTitulo() << ", Gênero: " << filme->getGenero() << ", Duração: " << filme->getDuracao()
+                     << ", Faixa etária: " << filme->getFaixaEtaria() << ", Autor: " << filme->getNomeAutor() << "\n";
+                encontrado=true;
+            }
+        }
+
+        if(encontrado == false)
+        {
+            cout<<"\n\nNenhum registro foi encontrado com o nome digitado";
+            Sleep(2000);
+            system("cls");
+        }
+
+    }
+    void pesquisa_por_genero()
+    {
+        string genero;
+        bool encontrado=false;
+        cout << "Genero do Filme: ";
+        cin.ignore();
+        getline(cin, genero);
+        system("cls");
+        for(Filme* filme : filmes)
+        {
+            if( filme->getGenero() == genero )
+            {
+                cout << "Nome do Filme: " << filme->getTitulo() << ", Gênero: " << filme->getGenero() << ", Duração: " << filme->getDuracao()
+                     << ", Faixa etária: " << filme->getFaixaEtaria() << ", Autor: " << filme->getNomeAutor() << "\n";
+                encontrado=true;
+            }
+        }
+
+        if(encontrado == false)
+        {
+            cout<<"\n\nNenhum registro foi encontrado com o nome digitado";
+            Sleep(2000);
+            system("cls");
+        }
+
+    }
+
+    void cadastraAutor(const string& nomeAutor, const string& cpfUsuario, bool validarCPF)
+    {
+        if (validarCPF)
+        {
+            Autor* autor = new Autor(nomeAutor, cpfUsuario);
+
+            if (!autor->validarCPF())
+            {
+                cout << "CPF inválido. O CPF deve ter exatamente 11 dígitos." << endl;
+                delete autor;
+                return;
+            }
+
+            if (!autor->CPFdiferente(autores))
+            {
+                cout << "CPF já cadastrado em outro autor. Não é possível cadastrar novamente." << endl;
+                delete autor;
+                return;
+            }
+
+            autores.push_back(autor);
+        }
+        else
+        {
+            Autor* autor = new Autor(nomeAutor, cpfUsuario);
+
+            if (!autor->CPFdiferente(autores))
+            {
+                cout << "CPF já cadastrado em outro autor. Não é possível cadastrar novamente." << endl;
+                delete autor;
+                return;
+            }
+
+            autores.push_back(autor);
+        }
+
+        cout << "Autor cadastrado com sucesso." << endl;
+    }
+
+
+    void cadastraUsuario(const string& nomeUsuario, const string& cpfUsuario, int idadeUsuario,bool validarCPF)
+    {
+        if (validarCPF)
+        {
+            Usuario* usuario = new Usuario(nomeUsuario, cpfUsuario, idadeUsuario); // cria o objeto usuario, e aloca espaço
+            if (!usuario->validarCPF())
+            {
+                cout << "CPF inválido. O CPF deve ter exatamente 11 dígitos." ;
+                cout << "\n";
+                delete usuario;
+                return;
+            }
+            usuarios.push_back(usuario); //mesma coisa de autor
+        }
+        else
+        {
+            Usuario* usuario = new Usuario(nomeUsuario, cpfUsuario, idadeUsuario);
+            usuarios.push_back(usuario);
+        }
+        cout << "Usuário cadastrado com sucesso."; //mesma coisa de autor
+        cout << "\n";
+    }
+
+    void listarAutores()
+    {
+        cout << "Lista de Autores:";
+        cout << "\n";
+        for (Autor* autor : autores)
+        {
+            cout << "Nome do Autor: " << autor->getNomeAutor() << ", CPF do Autor: " << autor->getCPFUsuario() ;
+            cout << "\n";
+        }
+    }
+
+    void listarUsuarios()
+    {
+        cout << "Lista de Usuários:" ;
+        cout << "\n";
+        for (Usuario* usuario : usuarios)
+        {
+            cout << "Nome do Usuário: " << usuario->getNomeUsuario() << ", CPF do Usuário: " << usuario->getCPFUsuario()<< ",  Idade do Usuário: "<< usuario->getidadeUsuario()<< ", Minutagem: "<< usuario->getDuracaoFilmeAssistido();
+            cout << "\n";
+        }
+    }
+    void listarFilmes()
+    {
+        cout << "Lista de Filmes:\n";
+        for (const Filme* filme : filmes)
+        {
+            cout << "Nome do Filme: " << filme->getTitulo() << ", Gênero: " << filme->getGenero() << ", Duração: " << filme->getDuracao()
+                 << ", Faixa etária: " << filme->getFaixaEtaria() << ", Visualizacoes: " << filme->getVisualizacoes()<< ", Autor: " << filme->getNomeAutor() << "\n";
+        }
+    }
+    void listarFilmes_ord()
+    {
+        cout << "Lista de Filmes (ordenados por visualizações):\n";
+        vector<Filme*> filmesOrdenados(filmes);
+        for (int i = 0; i < filmesOrdenados.size() - 1; ++i)
+
+            for (int i = 0; i < filmesOrdenados.size() - 1; ++i)
+            {
+                for (int j = 0; j < filmesOrdenados.size() - i - 1; ++j)
+                {
+                    // Verificar se as visualizações do filme atual são menores do que as visualizações do próximo filme
+                    if (filmesOrdenados[j]->getVisualizacoes() < filmesOrdenados[j + 1]->getVisualizacoes())
+                    {
+                        // Trocar a posição dos filmes
+                        Filme* temp = filmesOrdenados[j];
+                        filmesOrdenados[j] = filmesOrdenados[j + 1];
+                        filmesOrdenados[j + 1] = temp;
+                    }
+                }
+            }
+
+        for (const Filme* filme : filmesOrdenados)
+        {
+            cout << "Nome do Filme: " << filme->getTitulo() << ", Gênero: " << filme->getGenero() << ", Duração: " << filme->getDuracao()
+                 << ", Faixa etária: " << filme->getFaixaEtaria() << ", Visualizações: " << filme->getVisualizacoes() << ", Autor: " << filme->getNomeAutor() << "\n";
+        }
+    }
+
+
+    void inserirRegistrosAutomaticos()
+    {
+        cadastraAutor("Autor1", "12345678912",true);
+        cadastraAutor("Autor2", "98765432198", true);
+        cadastraAutor("Autor3", "96765432198", true);
+        cadastraAutor("Rafael", "96769432198", true);
+        cadastraAutor("Tulio", "96769431198", true);
+        cadastraUsuario("Usuario1", "11111111111",15, true);
+        cadastraUsuario("Usuario2", "22222222222",16, true);
+        cadastraUsuario("Usuario3", "33333333333",18, true);
+        cadastraUsuario("Usuario4", "44444444444",21, true);
+        cadastraUsuario("Usuario5", "55555555555",49, true);
+        cadastraFilme("Filme1","Acao",100,16,12,"Autor1");
+        cadastraFilme("Filme2","Terror",50,18,120,"Autor2");
+        cadastraFilme("Filme3","Adulto",12,18,132,"Autor3");
+        cadastraFilme("Filme4","Comedia",120,1,17,"Rafael");
+        cadastraFilme("Filme5","Genero1",110,43,18,"Tulio");
+    }
+
+    void assistir_filme()
+    {
+        cout << "\n=== Usuário que vai assistir o filme ===\n";
+        string nomeUsuario;
+        bool encontrado = false;
+        cout << "Nome do Usuário: ";
+        cin.ignore();
+        getline(cin, nomeUsuario);
+        system("cls");
+        for (Usuario* usuario : usuarios)
+        {
+            if (usuario->getNomeUsuario() == nomeUsuario)
+            {
+                cout << "Nome do Usuario: " << usuario->getNomeUsuario() << ", Idade: " << usuario->getidadeUsuario() << "\n";
+                encontrado = true;
+                ////////////
+                char opcao;
+                cout << "========Seleção de filme=======\n";
+                cout << " T) pesquisar filme pelo titulo\n";
+                cout << " G) pesquisar filme pelo genero\n";
+                cout << " A) pesquisar filme pelo autor\n";
+                cout << "Opção: ";
+                cin >> opcao;
+                switch (opcao)
+                {
+                case 't':
+                case 'T':
+                {
+                    string nomeFilme;
+                    bool filmeEncontrado = false;
+                    vector<Filme*> filmesEncontrados;
+
+
+                    for (const Filme* filme : filmes)
+                    {
+                        cout << "Nome do Filme: " << filme->getTitulo()
+                             << ", Faixa etária: " << filme->getFaixaEtaria()<< "\n";
+                    }
+                    cout << "Nome do Filme: ";
+                    cin.ignore();
+                    getline(cin, nomeFilme);
+                    cout << "Lista de Filmes:\n";
+                    for (Filme* filme : filmes)
+                    {
+                        if (filme->getTitulo() == nomeFilme)
+                        {
+                            filmesEncontrados.push_back(filme);
+                            filmeEncontrado = true;
+                        }
+                    }
+
+                    if (filmeEncontrado)
+                    {
+                        cout << "Filmes encontrados:\n";
+                        for (int i = 0; i < filmesEncontrados.size(); i++)
+                        {
+                            cout << i + 1 << ") " << filmesEncontrados[i]->getTitulo() << endl;
+                        }
+
+                        int escolha;
+                        cout << "Escolha o número do filme que deseja assistir: ";
+                        cin >> escolha;
+
+                        if (escolha >= 1 && escolha <= filmesEncontrados.size())
+                        {
+                            Filme* filmeEscolhido = filmesEncontrados[escolha - 1];
+                            if (usuario->getidadeUsuario() >= filmeEscolhido->getFaixaEtaria())
+                            {
+                                cout << "Você assistiu o filme, sua visualização foi contabilizada." << endl;
+                                filmeEscolhido->adicionarVisualizacao();
+                                usuario->setDuracaoFilmeAssistido(filmeEscolhido->getDuracao());
+                            }
+                            else
+                            {
+                                cout << "Idade não permitida para assistir o filme." << endl;
+                            }
+                        }
+                        else
+                        {
+                            cout << "Opção inválida." << endl;
+                        }
+                    }
+                    else
+                    {
+                        cout << "Filme não encontrado.\n";
+                    }
+
+                    break;
+                }
+                case 'G':
+                case 'g':
+                {
+                    string generoFilme;
+                    bool generoEncontrado = false;
+                    vector<Filme*> filmesPorGenero;
+                    cout << "Lista de Filmes:\n";
+                    for (const Filme* filme : filmes)
+                    {
+                        cout << "Nome do Filme: " << filme->getTitulo() << ", Gênero: " << filme->getGenero()
+                             << ", Faixa etária: " << filme->getFaixaEtaria()<< "\n";
+                    }
+                    cout << "Gênero do Filme: ";
+                    cin.ignore();
+                    getline(cin, generoFilme);
+
+                    for (Filme* filme : filmes)
+                    {
+                        if (filme->getGenero() == generoFilme)
+                        {
+                            filmesPorGenero.push_back(filme);
+                            generoEncontrado = true;
+                        }
+                    }
+
+                    if (generoEncontrado)
+                    {
+                        cout << "Filmes do gênero \"" << generoFilme << "\":\n";
+                        for (int i = 0; i < filmesPorGenero.size(); i++)
+                        {
+                            cout << i + 1 << ") " << filmesPorGenero[i]->getTitulo() << endl;
+                        }
+
+                        int escolha;
+                        cout << "Escolha o número do filme que deseja assistir: ";
+                        cin >> escolha;
+
+                        if (escolha >= 1 && escolha <= filmesPorGenero.size())
+                        {
+                            Filme* filmeEscolhido = filmesPorGenero[escolha - 1];
+                            if (usuario->getidadeUsuario() >= filmeEscolhido->getFaixaEtaria())
+                            {
+                                cout << "Você assistiu o filme, sua visualização foi contabilizada." << endl;
+                                filmeEscolhido->adicionarVisualizacao();
+                                usuario->setDuracaoFilmeAssistido(filmeEscolhido->getDuracao());
+                            }
+                            else
+                            {
+                                cout << "Idade não permitida para assistir o filme." << endl;
+                            }
+                        }
+                        else
+                        {
+                            cout << "Opção inválida." << endl;
+                        }
+                    }
+                    else
+                    {
+                        cout << "Não existem filmes do gênero \"" << generoFilme << "\".\n";
+                    }
+
+                    break;
+                }
+                case 'A':
+                case 'a':
+                {
+                    string autorFilme;
+                    bool autorEncontrado = false;
+                    vector<Filme*> filmesPorAutor;
+                    cout << "Lista de Filmes:\n";
+                    for (const Filme* filme : filmes)
+                    {
+                        cout << "Nome do Filme: " << filme->getTitulo() << ", Autor: " << filme->getNomeAutor()
+                             << ", Faixa etária: " << filme->getFaixaEtaria()<< "\n";
+                    }
+                    cout << "Autor do Filme: ";
+                    cin.ignore();
+                    getline(cin, autorFilme);
+
+                    for (Filme* filme : filmes)
+                    {
+                        if (filme->getNomeAutor() == autorFilme)
+                        {
+                            filmesPorAutor.push_back(filme);
+                            autorEncontrado = true;
+                        }
+                    }
+
+                    if (autorEncontrado)
+                    {
+                        cout << "Filmes do autor \"" << autorFilme << "\":\n";
+                        for (int i = 0; i < filmesPorAutor.size(); i++)
+                        {
+                            cout << i + 1 << ") " << filmesPorAutor[i]->getTitulo() << endl;
+                        }
+
+                        int escolha;
+                        cout << "Escolha o número do filme que deseja assistir: ";
+                        cin >> escolha;
+
+                        if (escolha >= 1 && escolha <= filmesPorAutor.size())
+                        {
+                            Filme* filmeEscolhido = filmesPorAutor[escolha - 1];
+                            if (usuario->getidadeUsuario() >= filmeEscolhido->getFaixaEtaria())
+                            {
+                                cout << "Você assistiu o filme, sua visualização foi contabilizada." << endl;
+                                filmeEscolhido->adicionarVisualizacao();
+                                usuario->setDuracaoFilmeAssistido(filmeEscolhido->getDuracao());
+                            }
+                            else
+                            {
+                                cout << "Idade não permitida para assistir o filme." << endl;
+                            }
+                        }
+                        else
+                        {
+                            cout << "Opção inválida." << endl;
+                        }
+                    }
+                    else
+                    {
+                        cout << "Não existem filmes do autor \"" << autorFilme << "\".\n";
+                    }
+
+                    break;
+                }
+
+
+                }
+            }
+        }
+
+        if (encontrado == false)
+        {
+            cout << "Usuário não encontrado.\n";
+        }
+    }
+    void ler_monetizacao()
+    {
+        float ingresso;
+        float verificaIngresso;
+        
+        cout << "\n=== Lista de Autores e suas Remunerações ===\n\n";
+
+        cout << "\nDigite o valor dos ingressos: \n";
+        cin>>verificaIngresso;
+        cout<<"\n";
+        if(verificaIngresso>0){
+            ingresso=verificaIngresso;
+        
+
+        for (Autor* autor : autores)
+        {
+            float monetizacao = 0.0f;
+
+            cout << "Nome do Autor: " << autor->getNomeAutor();
+
+            for (Filme* filme : filmes)
+            {
+                if (filme->getNomeAutor() == autor->getNomeAutor())
+                {
+                    monetizacao += filme->getVisualizacoes() * ingresso;
+                }
+            }
+
+            cout << ", Remuneração: " << monetizacao << endl;
+            cout << endl;
+        }
+        }else{
+            cout<<"valor de ingresso invalido";
+            
+        }
+    }
+
+
+    void listarUsuariosPorDuracao()
+    {
+        cout << "\n=== Lista de Usuários ordenados ===\n";
+        vector<Usuario*> usuariosOrdenados(usuarios);
+
+        for (int i = 0; i < usuariosOrdenados.size() - 1; ++i)
+        {
+            for (int j = 0; j < usuariosOrdenados.size() - i - 1; ++j)
+            {
+                // Verificar se a duração assistida pelo usuário atual é maior do que a duração do próximo usuário
+                if (usuariosOrdenados[j]->getDuracaoFilmeAssistido() > usuariosOrdenados[j + 1]->getDuracaoFilmeAssistido())
+                {
+                    // Trocar a posição dos usuários
+                    Usuario* aux = usuariosOrdenados[j];
+                    usuariosOrdenados[j] = usuariosOrdenados[j + 1];
+                    usuariosOrdenados[j + 1] = aux;
+                }
+            }
+        }
+
+        for (const Usuario* usuario : usuariosOrdenados)
+        {
+            cout << "Nome do Usuário: " << usuario->getNomeUsuario() << ", Minutos Assistidos: " << usuario->getDuracaoFilmeAssistido() << endl;
+        }
+    }
+
+
+};
+
+int main()
+{
+    setlocale(LC_ALL, "Portuguese");
+    int validadorRA =0;
+    char opcao;
+    Gerenciador gerenciador;
+
+    do
+    {
+        cout << "\nDigite:\n\n";
+        cout << "1) Cadastrar Filme\n";
+        cout << "2) Cadastrar Autor\n";
+        cout << "3) Cadastrar Usuário\n";
+        cout << "4) Listar Autores\n";
+        cout << "5) Listar Filmes\n";
+        cout << "6) Listar Usuários\n";
+        cout << "7) Pesquisar Filme\n";
+        cout << "8) Pesquisar Autor\n";
+        cout << "9) Pesquisar Usuário\n";
+        cout << "A) Inserir Registros Automáticos\n";
+        cout << "F) Listar Filmes por ordem decrescente de vizualizações\n";
+        cout << "U) Listar Usuários em ordem crescente em relação a minutos assistidos\n";
+        cout << "R) Listar Remuneração dos autores\n";
+        cout << "V) Visualizar Filme\n";
+        cout << "S) Sair\n\n";
+        cout << "Opção: ";
+        cin >> opcao;
+
+        switch (opcao)
+        {
+        case '1':
+        {
+            int visualizacoes=0;
+            string titulo;
+            string genero;
+            float duracao;
+            int faixaEtaria;
+            string autor;
+            float verifica_duracao;
+            int verifica_faixaEtaria;
+            string nomeAutor;
+
+
+            cout << "\n=== Cadastro de Filme ===\n";
+
+            cout << "Titulo do Filme: ";
+            cin.ignore();
+            getline(cin, titulo);
+
+            cout << "Genero do filme: ";
+            getline(cin, genero);
+
+            cout << "Duração do filme: ";
+            cin>>verifica_duracao;
+            if (verifica_duracao > 0)
+            {
+                duracao=verifica_duracao;
+            }
+            else
+            {
+                cout << "Duração Inválida, ta de brincadeira?";
+                break;
+            }
+            cout << "Classificação indicativa do filme: ";
+            cin>>verifica_faixaEtaria;
+            if (verifica_faixaEtaria > 0)
+            {
+                faixaEtaria=verifica_faixaEtaria;
+            }
+            else
+            {
+                cout << "Faixa etária inválida, você ta falando sério que eu te pedi idade, você digitou negativo";
+                Sleep(2000);
+                break;
+
+            }
+            cout << "Nome do autor do filme: ";
+            cin.ignore();
+            getline(cin, nomeAutor);
+
+            gerenciador.cadastraFilme(titulo, genero, duracao,faixaEtaria,visualizacoes,nomeAutor);
+            break;
+        }
+        case '2':
+        {
+            string nomeAutor, cpfAutor;
+
+            cout << "\n=== Cadastro de Autor ===\n";
+            cout << "Nome do Autor: ";
+            cin.ignore();
+            getline(cin, nomeAutor);
+            cout << "CPF do Autor: ";
+            getline(cin, cpfAutor);
+
+            gerenciador.cadastraAutor(nomeAutor, cpfAutor, true);
+            break;
+        }
+        case '3':
+        {
+            string nomeUsuario, cpfUsuario;
+            int verifiqueidade,idadeUsuario;
+
+            cout << "\n=== Cadastro de Usuário ===\n";
+            cout << "Nome do Usuário: ";
+            cin.ignore();
+            getline(cin, nomeUsuario);
+            cout << "CPF do Usuário: ";
+            getline(cin, cpfUsuario);
+            cout << "Idade do Usuário: ";
+            cin>>verifiqueidade;
+            if(verifiqueidade<200&&verifiqueidade>0)
+            {
+                idadeUsuario=verifiqueidade;
+                gerenciador.cadastraUsuario(nomeUsuario, cpfUsuario, idadeUsuario, true);
+            }
+            else
+            {
+                cout << "Idade invalida!!!\n";
+                break;
+            }
+
+            break;
+        }
+        case '4':
+        {
+            gerenciador.listarAutores();
+            Sleep(2000); // Aguarda 2000 milissegundos (2 segundos)
+            break;
+        }
+        case '5':
+        {
+            gerenciador.listarFilmes();
+            Sleep(2000);
+            break;
+        }
+
+        case '6':
+        {
+            gerenciador.listarUsuarios();
+            Sleep(2000);
+            break;
+        }
+        case '7':
+        {
+            string titulo, genero, nomeAutor;
+
+            cout << "\n=== Pesquisa de Filme ===\n";
+            cout << "T) Pesquisa através do Título\n\n";
+            cout << "G) Pesquisa através do Gênero\n\n";
+            cout << "A) Pesquisa através do Autor\n\n";
+            cin >> opcao;
+            switch (opcao)
+            {
+            case 'T':
+            case 't':
+            {
+                gerenciador.pesquisa_por_titulo();
+                Sleep(10000);
+                break;
+            }
+            case 'g':
+            case 'G':
+            {
+                gerenciador.pesquisa_por_genero();
+                Sleep(10000);
+                break;
+            }
+            case 'A':
+            case 'a':
+            {
+                gerenciador.pesquisa_por_autor();
+                Sleep(10000);
+                break;
+            }
+            }
+            break;
+        }
+        case '8':
+        {
+            string nomeAutor, cpfAutor;
+
+            cout << "\n=== Pesquisa de Autor ===\n";
+            cout << "N) Pesquisa através do nome\n\n";
+            cout << "C) Pesquisa através do CPF\n\n";
+            cout << "Opção: ";
+            cin >> opcao;
+            switch (opcao)
+            {
+            case 'N':
+            case 'n':
+            {
+                gerenciador.pesquisa_por_nome();
+                Sleep(10000);
+                break;
+            }
+            case 'C':
+            case 'c':
+            {
+                gerenciador.pesquisa_por_tel();
+                Sleep(10000);
+                break;
+            }
+
+            }
+            break;
+        }
+        case '9':
+        {
+            string nomeUsuario, cpfUsuario;
+            cout << "\n=== Pesquisa de Usuario ===\n";
+            cout << "N) Pesquisa através do nome\n\n";
+            cout << "C) Pesquisa através do CPF\n\n";
+            cout << "Opção: ";
+            cin >> opcao;
+            switch (opcao)
+            {
+            case 'N':
+            case 'n':
+            {
+                gerenciador.pesquisa_por_nome_user();
+                Sleep(10000);
+                break;
+
+            }
+            case 'c':
+            case 'C':
+            {
+                gerenciador.pesquisa_por_tel_user();
+                Sleep(10000);
+                break;
+            }
+            }
+            break;
+        }
+        case 'A':
+        case 'a':
+        {
+            if(validadorRA>0)
+            {
+                cout<<"Os registros automáticos já foram feitos anteriormente.";
+                break;
+            }
+            if(validadorRA == 0)
+            {
+                gerenciador.inserirRegistrosAutomaticos();
+                cout << "\nRegistros automáticos inseridos com sucesso." ;
+                cout << "\n";
+                validadorRA++;
+                break;
+
+            }
+        }
+        case 'F':
+        case 'f':
+        {
+            gerenciador.listarFilmes_ord();
+            Sleep(2000);
+            break;
+        }
+        case 'U':
+        case 'u':
+        {
+            gerenciador.listarUsuariosPorDuracao();
+            break;
+        }
+        case 'R':
+        case 'r':
+        {
+
+            gerenciador.ler_monetizacao();
+            Sleep(10000);
+            break;
+        }
+        case 'V':
+        case 'v':
+        {
+            string nomeUsuario, cpfUsuario;
+            int visualizacoes = 0;
+            float duracao;
+            int faixaEtaria;
+            gerenciador.assistir_filme();
+            break;
+        }
+        case 'N':
+        case 'n':
+        {
+            gerenciador.pesquisa_por_nome_user();
+            Sleep(10000);
+            break;
+        }
+
+        case 'S':
+        case 's':
+        {
+            cout << "Encerrando o programa..." ;
+            cout << "\n";
+            break;
+        }
+        default:
+            cout << "Opção inválida. Digite novamente." ;
+            cout << "\n";
+            break;
+        }
+        Sleep(2000); // Aguarda 2000 milissegundos (2 segundos)
+        system("cls");
+
+    }
+    while (opcao != 'S' && opcao != 's');
+
+    return 0;
+}
