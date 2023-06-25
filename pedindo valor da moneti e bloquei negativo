@@ -730,7 +730,7 @@ public:
                 {
                 cout<<"\n Digite o valor para ser o valor da visualização : ";
                 cin>>valorv;
-                if(valorv>1){
+                if(valorv>0){
                 monetizacao += filme->getVisualizacoes() * valorv;
                 }
                 else {
